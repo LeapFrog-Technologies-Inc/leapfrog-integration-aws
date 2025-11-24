@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-11-24
+
+### Fixed
+- Updated Leapfrog API endpoint to use `api.leapfrog.cloud` domain (production endpoint).
+
+## [1.0.1] - 2025-11-24
+
+### Changed
+- Enabled live API delivery in Lambda function (removed MOCK mode).
+- Added proper error handling for API failures.
+- Lambda now returns 200 OK even on API failure to prevent SNS retries for permanent errors.
+
 ## [1.0.0] - 2025-11-23
 
 ### Added
@@ -31,5 +43,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API keys stored as SecureString in SSM Parameter Store
 - Least-privilege IAM policies for Lambda execution
 - Cross-account access role for CloudBuilder service
-
-[1.0.0]: https://github.com/LeapfrogTechnologies/terraform-aws-leapfrog-integration/releases/tag/v1.0.0
