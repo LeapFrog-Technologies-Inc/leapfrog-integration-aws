@@ -61,7 +61,7 @@ def lambda_handler(event, context):
         return {"statusCode": 500, "body": "Failed to fetch configuration"}
 
     # Prepare payload for Leapfrog Platform
-    leapfrog_api_url = "https://api.leapfrog.tech/v1/alerts"
+    leapfrog_api_url = "https://api.leapfrog.cloud/v1/alerts"
 
     payload = {
         "org_id": org_id,
