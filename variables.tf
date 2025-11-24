@@ -10,9 +10,9 @@ variable "leapfrog_org_id" {
 }
 
 variable "trusted_principal_arns" {
-  description = "List of AWS principal ARNs allowed to assume the Leapfrog integration role."
+  description = "List of AWS principal ARNs allowed to assume the Leapfrog integration role. Must be configured with your AWS account ID or role ARNs."
   type        = list(string)
-  default     = ["arn:aws:iam::600627338216:root"]
+  default     = ["arn:aws:iam::123456789012:root"] # Placeholder - must be replaced with actual account ID
 }
 
 variable "lambda_function_names" {
