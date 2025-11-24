@@ -54,13 +54,11 @@ module "leapfrog_integration" {
 |------|-------------|------|---------|
 | `leapfrog_api_key` | API Key for Leapfrog Platform authentication | `string` (sensitive) | `"lf_api_xxxxxxxxxxxxx"` |
 | `leapfrog_org_id` | Organization ID for Leapfrog Platform | `string` | `"org_xxxxxxxxxxxxx"` |
+| `trusted_principal_arns` | List of AWS principal ARNs allowed to assume the Leapfrog integration IAM role. Must be configured with your AWS account ID or role ARNs. | `list(string)` | `["arn:aws:iam::123456789012:root"]` |
 
 ### Optional Variables
 
 All alert types are **enabled by default** for comprehensive monitoring. Set to `false` to disable specific alerts:
-
-#### Cross-Account Access
-- `trusted_principal_arns` - AWS account or role ARNs allowed to assume the Leapfrog integration IAM role (defaults to the Leapfrog service account).
 
 #### Compute & Container Services
 - `enable_lambda_failure_alerts` - AWS Lambda function failures
@@ -124,7 +122,7 @@ All alert types are **enabled by default** for comprehensive monitoring. Set to 
 - `enable_trusted_advisor_error_warning_alerts` - Trusted Advisor recommendations
 
 #### Lambda Monitoring
-- `lambda_function_names` - Specific Lambda functions to monitor (defaults to all functions except leapfrog-connector)
+- `lambda_function_names` - List of specific Lambda function names to monitor for failures. If empty (default), monitors all Lambda functions except `leapfrog-connector`
 
 ## Outputs
 
