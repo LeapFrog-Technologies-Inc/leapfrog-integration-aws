@@ -52,8 +52,8 @@ module "leapfrog_integration" {
 
 | Name | Description | Type | Example |
 |------|-------------|------|---------|
-| `leapfrog_api_key` | API Key for Leapfrog Platform authentication | `string` (sensitive) | `"lf_api_xxxxxxxxxxxxx"` |
-| `leapfrog_org_id` | Organization ID for Leapfrog Platform | `string` | `"org_xxxxxxxxxxxxx"` |
+| `leapfrog_api_key` | API Key for Leapfrog Platform authentication | `string` (sensitive) | `"ck_xxxxxxxxxxxxx"` |
+| `leapfrog_org_id` | Organization ID for Leapfrog Platform | `string` | `"xxxxxxxxxxxxx"` |
 | `trusted_principal_arns` | List of AWS principal ARNs allowed to assume the Leapfrog integration IAM role. Must be configured with your AWS account ID or role ARNs. | `list(string)` | `["arn:aws:iam::123456789012:root"]` |
 
 ### Optional Variables
@@ -255,13 +255,13 @@ aws logs tail /aws/lambda/leapfrog-connector --follow
 
 ## Version History
 
-- **v1.0.0** - Initial public release with comprehensive AWS service monitoring, Prowler integration, and configurable cross-account access
+- **v1.0.0** - Initial public release with comprehensive AWS service monitoring, security integration, and configurable cross-account access
 
 ## Support
 
 For issues, questions, or feature requests:
-- Contact: Leapfrog Support
-- Documentation: [Leapfrog Platform Docs](https://docs.leapfrog.io)
+- Contact: Leapfrog Support 
+
 
 ## License
 
