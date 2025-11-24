@@ -10,7 +10,7 @@ provider "aws" {
 }
 
 module "leapfrog_integration" {
-  source = "../../"  # When using from GitHub: "github.com/LeapFrog-Technologies-Inc/leapfrog-infra//terraform-aws-leapfrog-integration?ref=v1.0.0"
+  source = "../../"  # When using from GitHub: "github.com/LeapFrog-Technologies-Inc/terraform-aws-leapfrog-integration?ref=v1.0.0"
 
   leapfrog_api_key = var.leapfrog_api_key
   leapfrog_org_id  = var.leapfrog_org_id
