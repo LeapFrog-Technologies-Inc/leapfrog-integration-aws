@@ -18,12 +18,12 @@ output "lambda_function_name" {
   value       = aws_lambda_function.leapfrog_connector.function_name
 }
 
-output "cloudbuilder_role_arn" {
-  description = "ARN of the Leapfrog CloudBuilder IAM role"
-  value       = aws_iam_role.leapfrog_cloud_builder_role.arn
+output "leapfrog_integration_role_arn" {
+  description = "ARN of the Leapfrog Integration IAM role"
+  value       = aws_iam_role.leapfrog_integration_role.arn
 }
 
-output "cloudbuilder_role_name" {
-  description = "Name of the Leapfrog CloudBuilder IAM role"
-  value       = aws_iam_role.leapfrog_cloud_builder_role.name
+output "leapfrog_integration_role_name" {
+  description = "Name of the Leapfrog Integration IAM role"
+  value       = aws_iam_role.leapfrog_integration_role.name
 }

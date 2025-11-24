@@ -1,5 +1,5 @@
-resource "aws_iam_role" "leapfrog_cloud_builder_role" {
-  name = "LeapfrogCloudBuilderRole"
+resource "aws_iam_role" "leapfrog_integration_role" {
+  name = "LeapfrogIntegrationRole"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -21,17 +21,17 @@ resource "aws_iam_role" "leapfrog_cloud_builder_role" {
     ]
   })
 
-  description = "IAM role for CloudBuilder service with Cost Explorer, Resource Groups Tagging API, and Config permissions"
+  description = "IAM role for Leapfrog Integration service with Cost Explorer, Resource Groups Tagging API, and Config permissions"
 
   tags = {
-    Name    = "LeapfrogCloudBuilderRole"
-    Service = "LeapfrogCloudBuilder"
+    Name    = "LeapfrogIntegrationRole"
+    Service = "LeapfrogIntegration"
   }
 }
 
-resource "aws_iam_role_policy" "leapfrog_cloud_builder_policy" {
-  name = "LeapfrogCloudBuilderPolicy"
-  role = aws_iam_role.leapfrog_cloud_builder_role.id
+resource "aws_iam_role_policy" "leapfrog_integration_policy" {
+  name = "LeapfrogIntegrationPolicy"
+  role = aws_iam_role.leapfrog_integration_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"

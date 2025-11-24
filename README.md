@@ -9,7 +9,7 @@ Terraform module for integrating AWS infrastructure monitoring with the Leapfrog
 - ⚡ **Real-time Event Processing** - Lambda-based event processing with SNS topic integration
 - 🎛️ **Granular Control** - Enable/disable specific alert types via feature flags
 - 🏗️ **Infrastructure as Code** - Fully declarative Terraform configuration
-- 📊 **CloudBuilder Integration** - Includes IAM role for Leapfrog CloudBuilder service access
+- 📊 **Integration Role** - Includes IAM role for Leapfrog Integration service access
 
 ## Architecture
 
@@ -125,7 +125,7 @@ The module creates the following resources (no explicit outputs):
 
 - SNS Topic: `leapfrog-alerts-sns-topic`
 - Lambda Function: `leapfrog-connector`
-- IAM Role: `LeapfrogCloudBuilderRole`
+- IAM Role: `LeapfrogIntegrationRole`
 - IAM Role: `leapfrog-connector-iam-role`
 - SSM Parameters: `/leapfrog/api_key`, `/leapfrog/org_id`
 
@@ -135,8 +135,8 @@ This module provisions:
 
 - **1 SNS Topic** - Central hub for all AWS alerts
 - **1 Lambda Function** - Processes and forwards events to Leapfrog
-- **2 IAM Roles** - CloudBuilder access role and Lambda execution role
-- **3 IAM Policies** - Permissions for CloudBuilder, Lambda, and SSM access
+- **2 IAM Roles** - Integration access role and Lambda execution role
+- **3 IAM Policies** - Permissions for Integration, Lambda, and SSM access
 - **2 SSM Parameters** - Secure storage for API credentials
 - **100+ CloudWatch Event Rules** - Monitors various AWS service events (based on enabled alerts)
 - **100+ CloudWatch Event Targets** - Routes events to SNS topic
@@ -146,8 +146,8 @@ This module provisions:
 
 - **API Key Storage**: Credentials are stored as SecureString in SSM Parameter Store with encryption at rest
 - **IAM Least Privilege**: Lambda execution role has minimal permissions (CloudWatch Logs + SSM read)
-- **CloudBuilder Role**: Scoped to Cost Explorer, Resource Groups, Config, CloudTrail, and SSM access
-- **Cross-Account Access**: CloudBuilder role allows assumption from Leapfrog AWS account (`600627338216`)
+- **Integration Role**: Scoped to Cost Explorer, Resource Groups, Config, CloudTrail, and SSM access
+- **Cross-Account Access**: Integration role allows assumption from Leapfrog AWS account (`600627338216`)
 
 ## Examples
 

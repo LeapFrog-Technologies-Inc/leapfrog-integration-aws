@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Updated Leapfrog API endpoint to use `api.leapfrog.cloud` domain (production endpoint).
+- Updated IAM role name to `LeapfrogIntegrationRole` and policy name to `LeapfrogIntegrationPolicy`.
 
 ## [1.0.1] - 2025-11-24
 
