@@ -9,7 +9,8 @@ Terraform module for integrating AWS infrastructure monitoring with the Leapfrog
 - ⚡ **Real-time Event Processing** - Lambda-based event processing with SNS topic integration
 - 🎛️ **Granular Control** - Enable/disable specific alert types via feature flags
 - 🏗️ **Infrastructure as Code** - Fully declarative Terraform configuration
-- 📊 **Integration Role** - Includes IAM role for Leapfrog Integration service access
+- 📊 **Integration Role** - Includes IAM role for Leapfrog Integration service access with Prowler compatibility
+- 🔍 **Prowler Integration** - Integration role includes read-only permissions for Prowler SaaS security scanning (40+ AWS services)
 
 ## Architecture
 
@@ -142,7 +143,7 @@ This module provisions:
 - **1 SNS Topic** - Central hub for all AWS alerts
 - **1 Lambda Function** - Processes and forwards events to Leapfrog
 - **2 IAM Roles** - Integration access role and Lambda execution role
-- **3 IAM Policies** - Permissions for Integration, Lambda, and SSM access
+- **5 IAM Policies** - Permissions for Integration (Cost Explorer, Config, CloudTrail, SSM), Prowler SaaS scanning (40+ services), API Gateway access, and Lambda execution
 - **2 SSM Parameters** - Secure storage for API credentials
 - **100+ CloudWatch Event Rules** - Monitors various AWS service events (based on enabled alerts)
 - **100+ CloudWatch Event Targets** - Routes events to SNS topic
@@ -152,7 +153,7 @@ This module provisions:
 
 - **API Key Storage**: Credentials are stored as SecureString in SSM Parameter Store with encryption at rest
 - **IAM Least Privilege**: Lambda execution role has minimal permissions (CloudWatch Logs + SSM read)
-- **Integration Role**: Scoped to Cost Explorer, Resource Groups, Config, CloudTrail, and SSM access
+- **Integration Role**: Scoped to Cost Explorer, Resource Groups, Config, CloudTrail, SSM access, and Prowler SaaS scan permissions (read-only access to 40+ AWS services for security scanning)
 - **Cross-Account Access**: `trusted_principal_arns` controls which AWS principals may assume the integration role (defaults to Leapfrog account `600627338216`, customizable per customer)
 
 ## Examples
@@ -165,6 +166,9 @@ module "leapfrog_integration" {
 
   leapfrog_api_key = var.leapfrog_api_key
   leapfrog_org_id  = var.leapfrog_org_id
+  trusted_principal_arns = [
+    "arn:aws:iam::600627338216:root" # Replace or extend with the AWS principals that will assume the role
+  ]
 }
 ```
 
@@ -176,6 +180,9 @@ module "leapfrog_integration" {
 
   leapfrog_api_key = var.leapfrog_api_key
   leapfrog_org_id  = var.leapfrog_org_id
+  trusted_principal_arns = [
+    "arn:aws:iam::600627338216:root" # Replace or extend with the AWS principals that will assume the role
+  ]
 
   # Only monitor critical production services
   enable_lambda_failure_alerts = true
@@ -197,6 +204,9 @@ module "leapfrog_integration" {
 
   leapfrog_api_key = var.leapfrog_api_key
   leapfrog_org_id  = var.leapfrog_org_id
+  trusted_principal_arns = [
+    "arn:aws:iam::600627338216:root" # Replace or extend with the AWS principals that will assume the role
+  ]
 
   # Only monitor these specific Lambda functions
   lambda_function_names = [
@@ -248,6 +258,9 @@ aws logs tail /aws/lambda/leapfrog-connector --follow
 
 ## Version History
 
+- **v1.0.3** - Added Prowler SaaS scan permissions to integration role; parameterized trusted principal ARNs for cross-account access
+- **v1.0.2** - Updated API endpoint to production domain (`api.leapfrog.cloud`); standardized IAM role naming
+- **v1.0.1** - Enabled live API delivery; improved error handling in Lambda function
 - **v1.0.0** - Initial release with comprehensive AWS service monitoring
 
 ## Support
