@@ -9,6 +9,12 @@ variable "leapfrog_org_id" {
   type        = string
 }
 
+variable "trusted_principal_arns" {
+  description = "List of AWS principal ARNs allowed to assume the Leapfrog integration role."
+  type        = list(string)
+  default     = ["arn:aws:iam::600627338216:root"]
+}
+
 variable "lambda_function_names" {
   description = "List of AWS Lambda function names to monitor for failures."
   type        = list(string)

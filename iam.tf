@@ -1,24 +1,27 @@
+data "aws_partition" "current" {}
+
 resource "aws_iam_role" "leapfrog_integration_role" {
   name = "LeapfrogIntegrationRole"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
+    Statement = concat([
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
           Service = "ec2.amazonaws.com"
         }
-      },
-      {
+      }
+      ], [
+      for principal_arn in local.trusted_principal_arns : {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::600627338216:root"
+          AWS = principal_arn
         }
-      },
-    ]
+      }
+    ])
   })
 
   description = "IAM role for Leapfrog Integration service with Cost Explorer, Resource Groups Tagging API, and Config permissions"
@@ -95,6 +98,89 @@ resource "aws_iam_role_policy" "leapfrog_integration_policy" {
         ]
         Effect   = "Allow"
         Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "leapfrog_integration_prowler_policy" {
+  name = "LeapfrogIntegrationProwlerPolicy"
+  role = aws_iam_role.leapfrog_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "account:Get*",
+          "appstream:Describe*",
+          "appstream:List*",
+          "backup:List*",
+          "backup:Get*",
+          "bedrock:List*",
+          "bedrock:Get*",
+          "cloudtrail:GetInsightSelectors",
+          "codeartifact:List*",
+          "codebuild:BatchGet*",
+          "codebuild:ListReportGroups",
+          "cognito-idp:GetUserPoolMfaConfig",
+          "dlm:Get*",
+          "drs:Describe*",
+          "ds:Get*",
+          "ds:Describe*",
+          "ds:List*",
+          "dynamodb:GetResourcePolicy",
+          "ec2:GetEbsEncryptionByDefault",
+          "ec2:GetSnapshotBlockPublicAccessState",
+          "ec2:GetInstanceMetadataDefaults",
+          "ecr:Describe*",
+          "ecr:GetRegistryScanningConfiguration",
+          "elasticfilesystem:DescribeBackupPolicy",
+          "glue:GetConnections",
+          "glue:GetSecurityConfiguration*",
+          "glue:SearchTables",
+          "glue:GetMLTransforms",
+          "lambda:GetFunction*",
+          "lightsail:GetRelationalDatabases",
+          "logs:FilterLogEvents",
+          "macie2:GetAutomatedDiscoveryConfiguration",
+          "macie2:GetMacieSession",
+          "s3:GetAccountPublicAccessBlock",
+          "securityhub:BatchImportFindings",
+          "securityhub:GetFindings",
+          "servicecatalog:Describe*",
+          "servicecatalog:List*",
+          "shield:DescribeProtection",
+          "shield:GetSubscriptionState",
+          "ssm-incidents:List*",
+          "ssm:GetDocument",
+          "support:Describe*",
+          "tag:GetTagKeys",
+          "wellarchitected:List*"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "leapfrog_integration_prowler_apigw_policy" {
+  name = "LeapfrogIntegrationProwlerApiGwPolicy"
+  role = aws_iam_role.leapfrog_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "apigateway:GET"
+        ]
+        Resource = [
+          "arn:${data.aws_partition.current.partition}:apigateway:*::/restapis/*",
+          "arn:${data.aws_partition.current.partition}:apigateway:*::/apis/*"
+        ]
       }
     ]
   })

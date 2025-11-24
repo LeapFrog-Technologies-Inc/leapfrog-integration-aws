@@ -34,6 +34,9 @@ module "leapfrog_integration" {
 
   leapfrog_api_key = var.leapfrog_api_key  # Store in terraform.tfvars or use secrets management
   leapfrog_org_id  = var.leapfrog_org_id
+  trusted_principal_arns = [
+    "arn:aws:iam::600627338216:root" # Replace or extend with the AWS principals that will assume the role
+  ]
 
   # Optional: Customize which alerts to enable (all default to true)
   enable_lambda_failure_alerts = true
@@ -54,6 +57,9 @@ module "leapfrog_integration" {
 ### Optional Variables
 
 All alert types are **enabled by default** for comprehensive monitoring. Set to `false` to disable specific alerts:
+
+#### Cross-Account Access
+- `trusted_principal_arns` - AWS account or role ARNs allowed to assume the Leapfrog integration IAM role (defaults to the Leapfrog service account).
 
 #### Compute & Container Services
 - `enable_lambda_failure_alerts` - AWS Lambda function failures
@@ -147,7 +153,7 @@ This module provisions:
 - **API Key Storage**: Credentials are stored as SecureString in SSM Parameter Store with encryption at rest
 - **IAM Least Privilege**: Lambda execution role has minimal permissions (CloudWatch Logs + SSM read)
 - **Integration Role**: Scoped to Cost Explorer, Resource Groups, Config, CloudTrail, and SSM access
-- **Cross-Account Access**: Integration role allows assumption from Leapfrog AWS account (`600627338216`)
+- **Cross-Account Access**: `trusted_principal_arns` controls which AWS principals may assume the integration role (defaults to Leapfrog account `600627338216`, customizable per customer)
 
 ## Examples
 
