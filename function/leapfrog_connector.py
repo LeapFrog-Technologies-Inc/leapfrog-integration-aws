@@ -61,9 +61,7 @@ def lambda_handler(event, context):
         return {"statusCode": 500, "body": "Failed to fetch configuration"}
 
     # Prepare payload for Leapfrog Platform
-    # Note: This is a placeholder URL. In a real scenario, this would be the actual Leapfrog API endpoint.
-    # For now, we will simulate the sending or use a placeholder if the user hasn't provided a real URL.
-    leapfrog_api_url = "https://api.leapfrog.tech/v1/alerts" # Placeholder
+    leapfrog_api_url = "https://api.leapfrog.tech/v1/alerts"
 
     payload = {
         "org_id": org_id,
@@ -78,17 +76,13 @@ def lambda_handler(event, context):
     }
 
     print(f"Sending alert to Leapfrog Platform: {leapfrog_api_url}")
-    # In a real implementation, we would make the request:
-    # try:
-    #     response = requests.post(leapfrog_api_url, json=payload, headers=headers, timeout=10)
-    #     response.raise_for_status()
-    #     print("Alert sent successfully to Leapfrog.")
-    # except Exception as e:
-    #     print(f"ERROR: Failed to send alert to Leapfrog: {e}")
-    #     # We might want to return 200 even on failure to avoid SNS retries if it's a permanent error, 
-    #     # but for now let's log it.
     
-    # For demonstration purposes, we'll just log that we would have sent it.
-    print("MOCK: Alert sent to Leapfrog Platform (simulated).")
-
-    return {"statusCode": 200, "body": "Alert processed successfully"}
+    try:
+        response = requests.post(leapfrog_api_url, json=payload, headers=headers, timeout=10)
+        response.raise_for_status()
+        print(f"Alert sent successfully to Leapfrog. Status: {response.status_code}")
+        return {"statusCode": 200, "body": "Alert processed successfully"}
+    except requests.exceptions.RequestException as e:
+        print(f"ERROR: Failed to send alert to Leapfrog: {e}")
+        # Return 200 to avoid SNS retries for permanent errors
+        return {"statusCode": 200, "body": f"Alert processing failed: {str(e)}"}
