@@ -258,10 +258,7 @@ aws logs tail /aws/lambda/leapfrog-connector --follow
 
 ## Version History
 
-- **v1.0.3** - Added Prowler SaaS scan permissions to integration role; parameterized trusted principal ARNs for cross-account access
-- **v1.0.2** - Updated API endpoint to production domain (`api.leapfrog.cloud`); standardized IAM role naming
-- **v1.0.1** - Enabled live API delivery; improved error handling in Lambda function
-- **v1.0.0** - Initial release with comprehensive AWS service monitoring
+- **v1.0.0** - Initial public release with comprehensive AWS service monitoring, Prowler integration, and configurable cross-account access
 
 ## Support
 

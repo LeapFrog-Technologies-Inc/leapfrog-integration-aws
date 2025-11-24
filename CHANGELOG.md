@@ -5,31 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.3] - 2025-11-24
+## [1.0.0] - 2025-11-24
 
 ### Added
-- New `trusted_principal_arns` variable to configure which AWS principals can assume the Leapfrog integration IAM role.
-
-### Changed
-- Leapfrog integration role trust policy now derives principals from `trusted_principal_arns` instead of a hardcoded AWS account ID.
-
-## [1.0.2] - 2025-11-24
-
-### Fixed
-- Updated Leapfrog API endpoint to use `api.leapfrog.cloud` domain (production endpoint).
-- Updated IAM role name to `LeapfrogIntegrationRole` and policy name to `LeapfrogIntegrationPolicy`.
-
-## [1.0.1] - 2025-11-24
-
-### Changed
-- Enabled live API delivery in Lambda function (removed MOCK mode).
-- Added proper error handling for API failures.
-- Lambda now returns 200 OK even on API failure to prevent SNS retries for permanent errors.
-
-## [1.0.0] - 2025-11-23
-
-### Added
-- Initial release of Leapfrog Integration Terraform module
+- Initial public release of Leapfrog Integration Terraform module
 - Support for 30+ AWS service monitoring including:
   - Compute: Lambda, EC2, ECS, Batch
   - Database: RDS, DMS, Redshift
@@ -44,11 +23,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SNS topic for centralized alert aggregation
 - Lambda function for event processing and forwarding to Leapfrog Platform
 - Secure credential storage via AWS SSM Parameter Store
-- CloudBuilder IAM role for Leapfrog platform access
+- IAM role for Leapfrog Integration service access
+- Prowler SaaS scan permissions for security scanning compatibility
+- Read-only access to 40+ AWS services for Prowler integration (Account, AppStream, Backup, Bedrock, CloudTrail, CodeArtifact, CodeBuild, Cognito, DLM, DRS, Directory Service, DynamoDB, EC2, ECR, EFS, Glue, Lambda, Lightsail, Logs, Macie, S3, Security Hub, Service Catalog, Shield, SSM, SSM Incidents, Support, Tags, Well-Architected)
+- API Gateway read permissions for Prowler integration (REST APIs and HTTP APIs)
+- Configurable `trusted_principal_arns` variable for cross-account access control
 - Granular enable/disable flags for all alert types (all enabled by default)
 - Comprehensive documentation and examples
 
 ### Security
-- API keys stored as SecureString in SSM Parameter Store
+- API keys stored as SecureString in SSM Parameter Store with encryption at rest
 - Least-privilege IAM policies for Lambda execution
-- Cross-account access role for CloudBuilder service
+- Configurable cross-account access via `trusted_principal_arns` variable
+- Integration role scoped to Cost Explorer, Resource Groups, Config, CloudTrail, SSM access, and Prowler SaaS scan permissions
