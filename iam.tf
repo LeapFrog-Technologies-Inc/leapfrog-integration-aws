@@ -12,6 +12,13 @@ resource "aws_iam_role" "leapfrog_integration_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
+      },
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
       }
       ], [
       for principal_arn in local.trusted_principal_arns : {
@@ -24,7 +31,7 @@ resource "aws_iam_role" "leapfrog_integration_role" {
     ])
   })
 
-  description = "IAM role for Leapfrog Integration service with Cost Explorer, Resource Groups Tagging API, and Config permissions"
+  description = "IAM role for Leapfrog Integration service with Cost Explorer, Resource Groups Tagging API, Config permissions, and Lambda execution"
 
   tags = {
     Name    = "LeapfrogIntegrationRole"
@@ -98,19 +105,9 @@ resource "aws_iam_role_policy" "leapfrog_integration_policy" {
         ]
         Effect   = "Allow"
         Resource = "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy" "leapfrog_integration_prowler_policy" {
-  name = "LeapfrogIntegrationProwlerPolicy"
-  role = aws_iam_role.leapfrog_integration_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+      },
       {
+        Sid    = "ProwlerSaaSScanPermissions"
         Effect = "Allow"
         Action = [
           "account:Get*",
@@ -160,19 +157,9 @@ resource "aws_iam_role_policy" "leapfrog_integration_prowler_policy" {
           "wellarchitected:List*"
         ]
         Resource = "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy" "leapfrog_integration_prowler_apigw_policy" {
-  name = "LeapfrogIntegrationProwlerApiGwPolicy"
-  role = aws_iam_role.leapfrog_integration_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+      },
       {
+        Sid    = "ProwlerApiGatewayAccess"
         Effect = "Allow"
         Action = [
           "apigateway:GET"
@@ -181,37 +168,9 @@ resource "aws_iam_role_policy" "leapfrog_integration_prowler_apigw_policy" {
           "arn:${data.aws_partition.current.partition}:apigateway:*::/restapis/*",
           "arn:${data.aws_partition.current.partition}:apigateway:*::/apis/*"
         ]
-      }
-    ]
-  })
-}
-
-# Lambda Execution Role
-resource "aws_iam_role" "leapfrog_connector_iam_role" {
-  name = "leapfrog-connector-iam-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+      },
       {
-        Sid    = ""
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_policy" "leapfrog_connector_policy" {
-  name        = "LeapfrogConnectorIAMPolicy"
-  description = "Policy for Leapfrog Connector Lambda function"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
+        Sid    = "LambdaCloudWatchLogsAccess"
         Effect = "Allow"
         Action = [
           "logs:CreateLogStream",
@@ -222,6 +181,7 @@ resource "aws_iam_policy" "leapfrog_connector_policy" {
         Resource = "*"
       },
       {
+        Sid    = "LambdaSSMParameterReadAccess"
         Effect = "Allow"
         Action = [
           "ssm:GetParameterHistory",
@@ -238,7 +198,3 @@ resource "aws_iam_policy" "leapfrog_connector_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "leapfrog_connector_policy_attachment" {
-  role       = aws_iam_role.leapfrog_connector_iam_role.name
-  policy_arn = aws_iam_policy.leapfrog_connector_policy.arn
-}

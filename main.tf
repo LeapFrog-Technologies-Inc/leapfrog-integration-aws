@@ -77,7 +77,7 @@ resource "aws_lambda_function" "leapfrog_connector" {
 
   function_name = "leapfrog-connector"
   description   = "Leapfrog Integration Lambda function to send alerts to Leapfrog Platform."
-  role          = aws_iam_role.leapfrog_connector_iam_role.arn
+  role          = aws_iam_role.leapfrog_integration_role.arn
   handler       = "leapfrog_connector.lambda_handler"
   runtime       = "python3.13"
   timeout       = 30

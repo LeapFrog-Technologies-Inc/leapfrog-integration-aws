@@ -130,8 +130,7 @@ The module creates the following resources (no explicit outputs):
 
 - SNS Topic: `leapfrog-alerts-sns-topic`
 - Lambda Function: `leapfrog-connector`
-- IAM Role: `LeapfrogIntegrationRole`
-- IAM Role: `leapfrog-connector-iam-role`
+- IAM Role: `LeapfrogIntegrationRole` (used for both integration service and Lambda execution)
 - SSM Parameters: `/leapfrog/api_key`, `/leapfrog/org_id`
 
 ## Resources Created
@@ -140,8 +139,8 @@ This module provisions:
 
 - **1 SNS Topic** - Central hub for all AWS alerts
 - **1 Lambda Function** - Processes and forwards events to Leapfrog
-- **2 IAM Roles** - Integration access role and Lambda execution role
-- **5 IAM Policies** - Permissions for Integration (Cost Explorer, Config, CloudTrail, SSM), Prowler SaaS scanning (40+ services), API Gateway access, and Lambda execution
+- **1 IAM Role** - Combined role for integration service access and Lambda execution
+- **1 IAM Policy** - Unified policy with permissions for Integration (Cost Explorer, Config, CloudTrail, SSM), Prowler SaaS scanning (40+ services), API Gateway access, and Lambda execution (CloudWatch Logs + SSM read)
 - **2 SSM Parameters** - Secure storage for API credentials
 - **100+ CloudWatch Event Rules** - Monitors various AWS service events (based on enabled alerts)
 - **100+ CloudWatch Event Targets** - Routes events to SNS topic
@@ -150,7 +149,7 @@ This module provisions:
 ## Security Considerations
 
 - **API Key Storage**: Credentials are stored as SecureString in SSM Parameter Store with encryption at rest
-- **IAM Least Privilege**: Lambda execution role has minimal permissions (CloudWatch Logs + SSM read)
+- **IAM Least Privilege**: Combined role includes minimal Lambda execution permissions (CloudWatch Logs + SSM read) alongside integration permissions
 - **Integration Role**: Scoped to Cost Explorer, Resource Groups, Config, CloudTrail, SSM access, and Prowler SaaS scan permissions (read-only access to 40+ AWS services for security scanning)
 - **Cross-Account Access**: `trusted_principal_arns` controls which AWS principals may assume the integration role (customizable per customer deployment)
 
