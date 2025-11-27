@@ -1,16 +1,24 @@
 # Basic Example - Minimal Configuration
 # This example shows the simplest way to use the Leapfrog Integration module
 
+# IMPORTANT: Two-Step Setup Process
+# 1. First, deploy this module to create the IAM role
+# 2. Share the role ARN output with LeapFrog to receive your org_id and api_key
+# 3. Add the credentials to your terraform.tfvars file:
+#    leapfrog_org_id  = "your-org-id-from-dashboard"
+#    leapfrog_api_key = "your-api-key-from-dashboard"
+# 4. Run terraform apply again to complete the integration
+
 terraform {
   required_version = ">= 1.0"
 }
 
 provider "aws" {
-  region = "us-east-1"  # Change to your preferred region
+  region = "us-east-1" # Change to your preferred region
 }
 
 module "leapfrog_integration" {
-  source = "../../"  # When using from GitHub: "github.com/LeapFrog-Technologies-Inc/terraform-aws-leapfrog-integration?ref=v1.0.0"
+  source = "../../" # When using from GitHub: "github.com/LeapFrog-Technologies-Inc/terraform-aws-leapfrog-integration?ref=v1.0.0"
 
   leapfrog_api_key = var.leapfrog_api_key
   leapfrog_org_id  = var.leapfrog_org_id
